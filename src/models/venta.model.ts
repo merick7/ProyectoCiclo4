@@ -1,4 +1,7 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
+import {DetalleVenta} from './detalle-venta.model';
+import {Cliente} from './cliente.model';
+import {Vendedor} from './vendedor.model';
 
 @model({settings: {strict: false}})
 export class Venta extends Entity {
@@ -27,6 +30,29 @@ export class Venta extends Entity {
   })
   estado: number;
 
+  @property({
+    type: 'string',
+  })
+  detalleVentaId?: string;
+
+  @hasMany(() => DetalleVenta)
+  detalleVentas: DetalleVenta[];
+
+  @hasOne(() => Cliente)
+  cliente: Cliente;
+
+  @property({
+    type: 'string',
+  })
+  clienteId?: string;
+
+  @hasOne(() => Vendedor)
+  vendedor: Vendedor;
+
+  @property({
+    type: 'string',
+  })
+  vendedorId?: string;
   // Define well-known properties here
 
   // Indexer property to allow additional data

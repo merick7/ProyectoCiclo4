@@ -1,4 +1,7 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
+import {DetalleVenta} from './detalle-venta.model';
+import {Categoria} from './categoria.model';
+import {ImagenesPdto} from './imagenes-pdto.model';
 
 @model({settings: {strict: false}})
 export class Producto extends Entity {
@@ -45,6 +48,14 @@ export class Producto extends Entity {
   })
   activado: number;
 
+  @belongsTo(() => DetalleVenta)
+  detalleVentaId: string;
+
+  @belongsTo(() => Categoria)
+  categoriaId: string;
+
+  @hasMany(() => ImagenesPdto)
+  imagenesPdtos: ImagenesPdto[];
   // Define well-known properties here
 
   // Indexer property to allow additional data
