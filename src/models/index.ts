@@ -5,3 +5,4 @@ export * from './categoria.model';
 export * from './venta.model';
 export * from './producto.model';
 export * from './detalle-venta.model';
+export * from './imagenes-pdto.model';
