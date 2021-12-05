@@ -1,6 +1,6 @@
-import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
-import {DetalleVenta} from './detalle-venta.model';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {Categoria} from './categoria.model';
+import {DetalleVenta} from './detalle-venta.model';
 import {ImagenesPdto} from './imagenes-pdto.model';
 
 @model({settings: {strict: false}})
