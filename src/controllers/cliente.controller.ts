@@ -15,6 +15,7 @@ import {
 import {Cliente} from '../models';
 import {ClienteRepository} from '../repositories';
 import {AutenticacionService} from '../services';
+const fetch = require('node-fetch');
 
 export class ClienteController {
   constructor(
@@ -48,6 +49,12 @@ export class ClienteController {
     let c = await this.clienteRepository.create(cliente);
 
     //Notificacion al cliente
+    let destino = cliente.correoElec;
+    let asunto = "Registro app pedidos";
+    let contenido = `Hola ${cliente.nombres}, su nombre de usuario es: ${cliente.correoElec}, y su contraseña asignada es ${clave}`;
+    fetch(`http://127.0.0.1:5000/email?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`).then((data: any) => {
+      console.log(data);
+    })
     return c;
   }
 
