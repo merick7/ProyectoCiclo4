@@ -37,6 +37,12 @@ export class Administrador extends Entity {
     type: 'string',
     required: true,
   })
+  correoElec: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
   telFijo: string;
 
   @property({
@@ -44,6 +50,12 @@ export class Administrador extends Entity {
     required: true,
   })
   telMovil: string;
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  clave: string;
 
   // Define well-known properties here
 

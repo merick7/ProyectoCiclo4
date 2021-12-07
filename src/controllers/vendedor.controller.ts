@@ -1,31 +1,33 @@
+import {authenticate} from '@loopback/authentication';
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
+import {Llaves} from '../config/llaves';
 import {Vendedor} from '../models';
 import {VendedorRepository} from '../repositories';
+import {AutenticacionService} from '../services';
+const fetch = require('node-fetch');
 
 export class VendedorController {
   constructor(
     @repository(VendedorRepository)
-    public vendedorRepository : VendedorRepository,
-  ) {}
+    public vendedorRepository: VendedorRepository,
+    @service(AutenticacionService)
+    public servicioAutenticacion: AutenticacionService
+  ) { }
 
+  @authenticate("admin")
   @post('/vendedors')
   @response(200, {
     description: 'Vendedor model instance',
@@ -44,7 +46,19 @@ export class VendedorController {
     })
     vendedor: Omit<Vendedor, 'id'>,
   ): Promise<Vendedor> {
-    return this.vendedorRepository.create(vendedor);
+    let clave = this.servicioAutenticacion.GenerarClave();
+    let claveCifrada = this.servicioAutenticacion.CifrarClave(clave);
+    vendedor.clave = claveCifrada;
+    let a = await this.vendedorRepository.create(vendedor);
+
+    //Notificacion al Admin
+    let destino = vendedor.correoElec;
+    let asunto = "Registro Vendedores";
+    let contenido = `Hola ${vendedor.nombres}, ya haces parte de nuestra organizacion su nombre de usuario es: ${vendedor.correoElec}, y su contraseña asignada es ${clave}`;
+    fetch(`${Llaves.urlServicioNotificaciones}/email?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`).then((data: any) => {
+      console.log(data);
+    })
+    return a;
   }
 
   @get('/vendedors/count')
